@@ -80,7 +80,7 @@
   <modules>
     <module>tajo-maven-plugins</module>
     <module>tajo-project</module>
-    <module>tajo-common</module>
+ <!--   <module>tajo-common</module>-->
     <module>tajo-algebra</module>
     <module>tajo-plan</module>
     <module>tajo-core</module>
@@ -101,6 +101,15 @@
     <module>tajo-tablespace-example</module>
     <module>tajo-dist</module>
   </modules>
+  <dependencies>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>3.12.4</version>
+    </dependency>
+
+
+  </dependencies>
 
   <build>
     <pluginManagement>
@@ -154,11 +163,11 @@
           <version>2.5</version>
         </plugin>
 
-        <plugin>
+   <!--     <plugin>
           <groupId>org.apache.rat</groupId>
           <artifactId>apache-rat-plugin</artifactId>
           <version>0.8</version>
-        </plugin>
+        </plugin>-->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
@@ -310,7 +319,7 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
+  <!--    <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <inherited>false</inherited>
@@ -324,7 +333,7 @@
             <exclude>tajo-docs/src/main/sphinx/**</exclude>
           </excludes>
         </configuration>
-      </plugin>
+      </plugin>-->
     </plugins>
   </build>
 

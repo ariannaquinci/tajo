@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import org.apache.tajo.common.TajoDataTypes;
 import org.apache.tajo.schema.Field;
 import org.apache.tajo.type.*;
+import org.apache.tajo.type.Record;
 
 import static org.apache.tajo.catalog.CatalogUtil.newDataTypeWithLen;
 import static org.apache.tajo.catalog.CatalogUtil.newSimpleDataType;

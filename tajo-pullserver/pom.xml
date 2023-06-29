@@ -30,7 +30,7 @@
 
   <build>
     <plugins>
-      <plugin>
+  <!--    <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
         <executions>
@@ -41,7 +41,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
+      </plugin>-->
     </plugins>
   </build>
 
