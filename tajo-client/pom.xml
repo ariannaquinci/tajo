@@ -126,7 +126,7 @@
                 <include>src/main/proto/</include>
               </inputDirectories>
               <includeDirectories>
-        <!--        <includeDirectory>../tajo-common/src/main/proto</includeDirectory>-->
+            <includeDirectory>../tajo-common/src/main/proto</includeDirectory>
                 <includeDirectory>../tajo-catalog/tajo-catalog-common/src/main/proto</includeDirectory>
                 <includeDirectory>../tajo-core/src/main/proto</includeDirectory>
               </includeDirectories>
@@ -190,10 +190,10 @@
       <version>5.3.1</version>
       <scope>test</scope>
     </dependency>
-  <!--  <dependency>
+   <dependency>
       <groupId>org.apache.tajo</groupId>
       <artifactId>tajo-common</artifactId>
-    </dependency>-->
+    </dependency>
     <dependency>
       <groupId>org.apache.tajo</groupId>
       <artifactId>tajo-catalog-common</artifactId>

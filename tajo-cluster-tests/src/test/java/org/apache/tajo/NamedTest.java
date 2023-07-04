@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.tajo2.util;
+package org.apache.tajo;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

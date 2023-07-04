@@ -41,6 +41,7 @@ public class BackendTestingUtil {
         .add("score", Type.INT4)
         .build();
     mockupMeta = CatalogUtil.newTableMeta(BuiltinStorages.TEXT, new TajoConf());
+
   }
 
   public static void writeTmpTable(TajoConf conf, Path tablePath)

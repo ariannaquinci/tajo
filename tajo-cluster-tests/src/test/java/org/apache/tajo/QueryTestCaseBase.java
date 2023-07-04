@@ -155,6 +155,11 @@ public class QueryTestCaseBase {
   private static final Log LOG = LogFactory.getLog(QueryTestCaseBase.class);
   protected static final TpchTestBase testBase;
   protected static final TajoTestingCluster testingCluster;
+
+  public static TajoConf getConf() {
+    return conf;
+  }
+
   protected static TajoConf conf;
   protected static TajoClient client;
   protected static final CatalogService catalog;
