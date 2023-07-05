@@ -189,6 +189,7 @@
         </exclusion>
       </exclusions>
     </dependency>
+
   </dependencies>
   <profiles>
     <profile>
