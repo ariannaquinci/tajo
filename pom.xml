@@ -75,6 +75,10 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <tajo.root>${basedir}</tajo.root>
+
+    <sonar.organization>ariannaquinci</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.coverage.jacoco.xmlReportPaths>../test-jacoco/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
   <modules>
@@ -100,6 +104,7 @@
     <module>tajo-cluster-tests</module>
     <module>tajo-tablespace-example</module>
     <module>tajo-dist</module>
+    <module>test-jacoco</module>
   </modules>
   <dependencies>
     <dependency>
@@ -127,7 +132,7 @@
             <systemProperties>
               <tajo.test.enabled>true</tajo.test.enabled>
             </systemProperties>
-            <argLine>-Xms128m -Xmx1000m -Dfile.encoding=UTF-8 -Dderby.storage.pageSize=1024 -Dderby.stream.error.file=/dev/null</argLine>
+        <!--    <argLine>-Xms128m -Xmx1000m -Dfile.encoding=UTF-8 -Dderby.storage.pageSize=1024 -Dderby.stream.error.file=/dev/null</argLine>-->
             <includes>
               <include>tajo-cluster-tests/src/test/java/org/apache/tajo/client/CatalogAdminClientImplTests.java</include>
               <include>tajo-cluster-tests/src/test/java/org/apache/tajo/client/SessionConnectionTests.java</include>
@@ -442,6 +447,11 @@
               </execution>
             </executions>
           </plugin>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.8</version>
+          </plugin>
           <!--
            We want to sign the artifact, the POM, and all attached artifacts
           -->
@@ -465,5 +475,30 @@
 
       </build>
     </profile>
+    <!--jacoco profile -->
+    <profile>
+      <id>jacoco-cov</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.8</version>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
   </profiles>
 </project>

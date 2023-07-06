@@ -68,8 +68,8 @@
           <systemProperties>
             <tajo.test.enabled>true</tajo.test.enabled>
           </systemProperties>
-          <argLine>-Xms128m -Xmx1000m -Dfile.encoding=UTF-8 -Dderby.storage.pageSize=1024 -Dderby.stream.error.file=/dev/null</argLine>
-          <includes>
+        <!--  <argLine>-Xms128m -Xmx1000m -Dfile.encoding=UTF-8 -Dderby.storage.pageSize=1024 -Dderby.stream.error.file=/dev/null</argLine>,m5
+-->          <includes>
             <include>CatalogAdminClientImplTests.java</include>
             <include>SessionConnectionTests.java</include>
           </includes>
@@ -328,5 +328,40 @@
           <scope>test</scope>
       </dependency>
   </dependencies>
+
+  <profiles>
+
+    <!-- jacocoProfile -->
+    <profile>
+      <id>jacoco-cov</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.8</version>
+            <executions>
+              <execution>
+                <id>prepare-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 
 </project>
