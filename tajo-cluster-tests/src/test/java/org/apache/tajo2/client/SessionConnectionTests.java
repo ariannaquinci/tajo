@@ -1,9 +1,8 @@
-package org.apache.tajo.client;
+package org.apache.tajo2.client;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
-import org.apache.tajo.QueryTestCaseBase;
+import org.apache.tajo2.QueryTestCaseBase;
 import org.apache.tajo.*;
-import org.apache.tajo.client.SessionConnection;
 import org.apache.tajo.exception.NoSuchSessionVariableException;
 import org.apache.tajo.exception.UndefinedDatabaseException;
 import org.apache.tajo.service.ServiceTrackerFactory;
@@ -329,6 +328,7 @@ public class SessionConnectionTests {
         @Test
         public void unsetSessionVarTests() {
             for(int i=0; i<vars.size(); i++){
+            	
                 Assert.assertFalse( sessionConnection.unsetSessionVariables(this.vars).containsKey(this.vars.get(i)));}
         }
 
@@ -424,6 +424,5 @@ public class SessionConnectionTests {
 
 
 }
-
 
 

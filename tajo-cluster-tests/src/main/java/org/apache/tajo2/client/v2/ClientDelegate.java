@@ -16,12 +16,27 @@
  * limitations under the License.
  */
 
-package org.apache.tajo;
+package org.apache.tajo2.client.v2;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import org.apache.tajo.exception.QueryFailedException;
+import org.apache.tajo.exception.TajoException;
+import org.apache.tajo.exception.UndefinedDatabaseException;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface NamedTest {
-  String value();
+import java.io.Closeable;
+import java.sql.ResultSet;
+
+/**
+ * ClientDelegate is a delegate for various wired protocols like protocol buffer, rest API, and proxy.
+ */
+public interface ClientDelegate extends Closeable {
+
+  int executeUpdate(String sql) throws TajoException;
+
+  ResultSet executeSQL(String sql) throws TajoException, QueryFailedException;
+
+  QueryFuture executeSQLAsync(String sql) throws TajoException;
+
+  String currentDB();
+
+  void selectDB(String db) throws UndefinedDatabaseException;
 }

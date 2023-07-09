@@ -1,12 +1,10 @@
-package org.apache.tajo.client;
+package org.apache.tajo2.client;
 
 
+import net.bytebuddy.build.Plugin;
 import org.apache.hadoop.fs.Path;
-import org.apache.orc.OrcProto;
 import org.apache.tajo.*;
-import org.apache.tajo.annotation.Nullable;
 import org.apache.tajo.catalog.Schema;
-import org.apache.tajo.catalog.SchemaBuilder;
 import org.apache.tajo.catalog.TableMeta;
 import org.apache.tajo.catalog.partition.PartitionMethodDesc;
 import org.apache.tajo.catalog.proto.CatalogProtos;
@@ -18,21 +16,17 @@ import org.apache.tajo.util.CommonTestingUtil;
 import org.apache.tajo.util.KeyValueSet;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
+import org.apache.tajo2.*;
 import org.junit.*;
 import org.junit.Assert;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
-import java.util.List;
-
-import static org.apache.tajo.PartitionMethodDescTypes.*;
-import static org.apache.tajo.conf.TajoConf.ConfVars.*;
 
 @RunWith(value=Enclosed.class)
 public class CatalogAdminClientImplTests {
@@ -211,15 +205,15 @@ public class CatalogAdminClientImplTests {
         private static CatalogAdminClientImpl catalogAdminClient;
 
         @BeforeClass
-        public static void init() throws DuplicateDatabaseException {
-
+        public static void initCatalogAdminClient() throws DuplicateDatabaseException{
             catalogAdminClient = new CatalogAdminClientImpl(new SessionConnection(ServiceTrackerFactory.get(QueryTestCaseBase.getConf()), TajoConstants.DEFAULT_DATABASE_NAME, new KeyValueSet()));
             catalogAdminClient.createDatabase("default_database");
         }
 
-
+       
         @AfterClass
-        public static void clear() throws IOException {
+        public static void clear() throws IOException, UndefinedDatabaseException, InsufficientPrivilegeException, CannotDropCurrentDatabaseException {
+
             catalogAdminClient.close();
         }
 
@@ -229,7 +223,9 @@ public class CatalogAdminClientImplTests {
             return Arrays.asList(new Object[][]{
                     {"default_database", null},
                     {"dataBaseNonEsistente", UndefinedDatabaseException.class},
-                    {null, UndefinedDatabaseException.class}
+                    {null, UndefinedDatabaseException.class},
+                    //test added after whitebox approach
+                  //  {"information_schema", InsufficientPrivilegeException.class}
             });
         }
 
@@ -242,8 +238,11 @@ public class CatalogAdminClientImplTests {
         @Test
         public void dropDataBaseTests() {
             try {
+
                 catalogAdminClient.dropDatabase(dbName);
                 Assert.assertFalse(catalogAdminClient.existDatabase(dbName));
+                Assert.assertEquals(null, this.expectedException);
+
             } catch (UndefinedDatabaseException e) {
                 Assert.assertEquals(this.expectedException, e.getClass());
 
@@ -257,6 +256,7 @@ public class CatalogAdminClientImplTests {
         }
 
     }
+    
 
     @RunWith(Parameterized.class)
     public static class whiteboxCreateExternalTableTests{
@@ -299,8 +299,8 @@ public class CatalogAdminClientImplTests {
                     //tableName              schema               path           meta        partitionMethodDescType      expectedException
 
                     //APPROCCIO WHITE-BOX
-                    {"table1", schemaMock, true, metaMock, ILLEGAL, null},
-                    {"table1", schemaMock, true, metaMock, NULL, null}
+                    {"table1", schemaMock, true, metaMock, PartitionMethodDescTypes.ILLEGAL, null},
+                    {"table1", schemaMock, true, metaMock, PartitionMethodDescTypes.NULL, null}
             });
         }
 
@@ -323,12 +323,12 @@ public class CatalogAdminClientImplTests {
             this.meta = meta;
 
             this.expectedException = expectedExc;
-            if (partMethodDescType==LEGAL) {
+            if (partMethodDescType== PartitionMethodDescTypes.LEGAL) {
                 this.partMethodDesc = new PartitionMethodDesc("database", this.tableName, CatalogProtos.PartitionType.COLUMN, "expression", this.schema);
-            } else if(partMethodDescType==ILLEGAL) {
+            } else if(partMethodDescType== PartitionMethodDescTypes.ILLEGAL) {
                 this.partMethodDesc = new PartitionMethodDesc("database", this.tableName + "bis", CatalogProtos.PartitionType.COLUMN, "expression", this.schema);
 
-            }else if(partMethodDescType==NULL){
+            }else if(partMethodDescType== PartitionMethodDescTypes.NULL){
                 this.partMethodDesc=null;
             }
         }
@@ -355,3 +355,4 @@ public class CatalogAdminClientImplTests {
 
 
 }
+

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.tajo;
+package org.apache.tajo2;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;

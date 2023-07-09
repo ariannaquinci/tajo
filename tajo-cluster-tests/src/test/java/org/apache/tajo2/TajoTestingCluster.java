@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.tajo;
+package org.apache.tajo2;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Closeables;
@@ -31,10 +31,14 @@ import org.apache.hadoop.hdfs.MiniDFSCluster;
 import org.apache.hadoop.util.ShutdownHookManager;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.tajo.BuiltinStorages;
+import org.apache.tajo.QueryId;
+import org.apache.tajo.TajoConstants;
+import org.apache.tajo.TajoProtos;
 import org.apache.tajo.catalog.*;
-import org.apache.tajo.client.TajoClient;
-import org.apache.tajo.client.TajoClientImpl;
-import org.apache.tajo.client.TajoClientUtil;
+import org.apache.tajo2.client.TajoClient;
+import org.apache.tajo2.client.TajoClientImpl;
+import org.apache.tajo2.client.TajoClientUtil;
 import org.apache.tajo.conf.TajoConf;
 import org.apache.tajo.conf.TajoConf.ConfVars;
 import org.apache.tajo.engine.planner.global.rewriter.GlobalPlanTestRuleProvider;

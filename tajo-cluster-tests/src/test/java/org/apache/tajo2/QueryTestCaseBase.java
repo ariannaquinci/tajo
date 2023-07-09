@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.tajo;
+package org.apache.tajo2;
 
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
@@ -28,6 +28,9 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.tajo.QueryId;
+import org.apache.tajo.SessionVars;
+import org.apache.tajo.TajoConstants;
 import org.apache.tajo.algebra.*;
 import org.apache.tajo.annotation.Nullable;
 import org.apache.tajo.catalog.CatalogService;
@@ -35,15 +38,15 @@ import org.apache.tajo.catalog.TableDesc;
 import org.apache.tajo.cli.tsql.InvalidStatementException;
 import org.apache.tajo.cli.tsql.ParsedResult;
 import org.apache.tajo.cli.tsql.SimpleParser;
-import org.apache.tajo.client.TajoClient;
+import org.apache.tajo2.client.TajoClient;
 import org.apache.tajo.conf.TajoConf;
 import org.apache.tajo.engine.query.QueryContext;
 import org.apache.tajo.exception.InsufficientPrivilegeException;
 import org.apache.tajo.exception.TajoException;
 import org.apache.tajo.exception.UndefinedTableException;
-import org.apache.tajo.jdbc.FetchResultSet;
-import org.apache.tajo.jdbc.TajoMemoryResultSet;
-import org.apache.tajo.jdbc.TajoResultSetBase;
+import org.apache.tajo2.jdbc.FetchResultSet;
+import org.apache.tajo2.jdbc.TajoMemoryResultSet;
+import org.apache.tajo2.jdbc.TajoResultSetBase;
 import org.apache.tajo.master.GlobalEngine;
 import org.apache.tajo.parser.sql.SQLAnalyzer;
 import org.apache.tajo.plan.LogicalOptimizer;

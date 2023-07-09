@@ -148,6 +148,7 @@
   </build>
 
   <dependencies>
+   
     <dependency>
       <groupId>org.apache.tajo</groupId>
       <artifactId>tajo-common</artifactId>
@@ -168,10 +169,10 @@
       <groupId>org.apache.tajo</groupId>
       <artifactId>tajo-plan</artifactId>
     </dependency>
-    <dependency>
+ <!--   <dependency>
       <groupId>org.apache.tajo</groupId>
       <artifactId>tajo-client</artifactId>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.apache.tajo</groupId>
       <artifactId>tajo-catalog-client</artifactId>
@@ -363,7 +364,7 @@
       <properties>
         <BADUACLI>./target/lib/ba-dua-cli-0.6.0-all.jar</BADUACLI>
         <BADUASER>./target/badua.ser</BADUASER>
-        <CLASSES>../tajo-client/target/classes</CLASSES>
+        <CLASSES>./target/classes</CLASSES>
         <BADUAXML>./target/badua.xml</BADUAXML>
       </properties>
       <build>
@@ -423,6 +424,51 @@
         </executions>
       </plugin>
       </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>mutation-cov </id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <!-- For incremental analysis this should be commented out -->
+        <!-- <withHistory>true</withHistory> -->
+
+        <pitest.history.file>${project.build.directory}/pitest.history</pitest.history.file>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.14.1</version>
+            <configuration>
+              <targetClasses>
+                <param>org.apache.tajo2.client.CatalogAdminClientImpl</param>
+                <param>org.apache.tajo2.client.SessionConnection</param>
+              </targetClasses>
+              <targetTests>
+                <param>org.apache.tajo2.client.CatalogAdminClientImplTests*</param>
+                <param>org.apache.tajo2.client.SessionConnectionTests*</param>
+              </targetTests>
+              <avoidCallsTo>
+                <avoidCallsTo>org.slf4j</avoidCallsTo>
+              </avoidCallsTo>
+              <historyInputFile>${pitest.history.file}</historyInputFile>
+              <historyOutputFile>${pitest.history.file}</historyOutputFile>
+            </configuration>
+            <executions>
+              <execution>
+                <id>Generate PIT report</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>mutationCoverage</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
       </build>
     </profile>
 

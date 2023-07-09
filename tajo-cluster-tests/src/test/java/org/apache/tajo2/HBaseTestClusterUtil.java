@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.tajo;
+package org.apache.tajo2;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
