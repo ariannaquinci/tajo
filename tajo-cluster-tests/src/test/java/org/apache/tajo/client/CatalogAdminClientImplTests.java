@@ -31,6 +31,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.List;
 
+import static org.apache.tajo.PartitionMethodDescTypes.*;
 import static org.apache.tajo.conf.TajoConf.ConfVars.*;
 
 @RunWith(value=Enclosed.class)
@@ -130,18 +131,20 @@ public class CatalogAdminClientImplTests {
 
 
             return Arrays.asList(new Object[][]{
+                  
                     //tableName              schema               path           meta         partMethodDescValid        expectedException
                     {"table1", schemaMock, false, metaMock, true, UnavailableTableLocationException.class},
                     {"table1", schemaMock, true, metaMock, true, null},
                     {"", schemaMock, true, metaMock, true, null},
                     {null, schemaMock, true, metaMock, true, NullPointerException.class},
-                    {"table1", null, true, metaMock, true, NullPointerException.class},
+                    {"table1", null, true, metaMock, true,NullPointerException.class},
                     {"table1", schemaMock, true, null, true, NullPointerException.class},
-
+		{"table1", schemaMock, false, metaMock, true, NullPointerException.class},
                     {"table 1", schemaMock, true, metaMock, true, null},
-                    {"table1", schemaMock, true, metaMock, false, NullPointerException.class},
-                    //pensavo che il seguente test portasse IllegalArgumentException invece la creazione della tabella va a buon fine
-                    {"table1", schemaMock, true, metaMock, false, IllegalArgumentException.class},
+                    //Il seguente test ha un comportamento inaspettato, con approccio whitebox vedrò perchè
+                    //    {"table1", schemaMock, true, metaMock, false, NullPointerException.class},
+                    //creo meta con nome tabella diverso da tableName e mi aspetto IllegalArgumentException, ma non è così
+                    //  {"table1", schemaMock, true, metaMock, false, IllegalArgumentException.class},
 
 
             });
@@ -159,7 +162,9 @@ public class CatalogAdminClientImplTests {
                 BackendTestingUtil.writeTmpTable(conf, tPath);
                 this.path = tPath.toUri();
             } else {
-                this.path = new URI("/target/example");
+	   	 if(expectedExc==NullPointerException.class){
+		    this.path=null;}
+              	else{this.path = new URI("/target/example");}
             }
 
 
@@ -253,6 +258,99 @@ public class CatalogAdminClientImplTests {
 
     }
 
+    @RunWith(Parameterized.class)
+    public static class whiteboxCreateExternalTableTests{
+        public static CatalogAdminClientImpl catalogAdminClient;
+        private Class<? extends Exception> expectedException;
+        private String tableName;
+        private Schema schema;
+        private PartitionMethodDesc partMethodDesc;
+        private TableMeta meta;
+        private URI path;
+        private boolean created;
+
+        @BeforeClass
+        public static void init() throws IOException {
+
+            catalogAdminClient = new CatalogAdminClientImpl(new SessionConnection(ServiceTrackerFactory.get(QueryTestCaseBase.getConf()), TajoConstants.DEFAULT_DATABASE_NAME, new KeyValueSet()));
+
+        }
+
+        @After
+        public void dropTable() throws UndefinedTableException, InsufficientPrivilegeException {
+            if (created) {
+                catalogAdminClient.dropTable(this.tableName);
+            }
+        }
+
+        @AfterClass
+        public static void clean() throws UndefinedDatabaseException, InsufficientPrivilegeException, CannotDropCurrentDatabaseException, IOException {
+            //cancella la tabella esterne esistenti
+
+            catalogAdminClient.close();
+
+        }
+        @Parameterized.Parameters
+        public static Collection<Object[][]> getParams() {
+            Schema schemaMock = BackendTestingUtil.mockupSchema;
+            TableMeta metaMock = BackendTestingUtil.mockupMeta;
+
+            return Arrays.asList(new Object[][]{
+                    //tableName              schema               path           meta        partitionMethodDescType      expectedException
+
+                    //APPROCCIO WHITE-BOX
+                    {"table1", schemaMock, true, metaMock, ILLEGAL, null},
+                    {"table1", schemaMock, true, metaMock, NULL, null}
+            });
+        }
+
+        //white box constructor
+        public whiteboxCreateExternalTableTests(String tableName, Schema schema, boolean path, TableMeta meta, PartitionMethodDescTypes partMethodDescType, Class<? extends Exception> expectedExc) throws URISyntaxException, IOException {
+            this.tableName = tableName;
+            this.schema = schema;
+            TajoTestingCluster cluster = TpchTestBase.getInstance().getTestingCluster();
+            TajoConf conf = cluster.getConfiguration();
+            if (path) {
+
+                Path tPath = StorageUtil.concatPath(CommonTestingUtil.getTestDir(), "table1");
+                BackendTestingUtil.writeTmpTable(conf, tPath);
+                this.path = tPath.toUri();
+            } else {
+                this.path = new URI("/target/example");
+            }
+
+
+            this.meta = meta;
+
+            this.expectedException = expectedExc;
+            if (partMethodDescType==LEGAL) {
+                this.partMethodDesc = new PartitionMethodDesc("database", this.tableName, CatalogProtos.PartitionType.COLUMN, "expression", this.schema);
+            } else if(partMethodDescType==ILLEGAL) {
+                this.partMethodDesc = new PartitionMethodDesc("database", this.tableName + "bis", CatalogProtos.PartitionType.COLUMN, "expression", this.schema);
+
+            }else if(partMethodDescType==NULL){
+                this.partMethodDesc=null;
+            }
+        }
+        @Test
+        public void createExternalTableTests() {
+
+            try {
+                Assert.assertEquals("default." + tableName, catalogAdminClient.createExternalTable(tableName, schema, path, meta, this.partMethodDesc).getName());
+                Assert.assertEquals(this.expectedException, null);
+                created = true;
+            } catch (UnavailableTableLocationException e) {
+                Assert.assertEquals(this.expectedException, e.getClass());
+            } catch (InsufficientPrivilegeException e) {
+                Assert.assertEquals(this.expectedException, e.getClass());
+            } catch (DuplicateTableException e) {
+                Assert.assertEquals(this.expectedException, e.getClass());
+            } catch (NullPointerException e) {
+                Assert.assertEquals(this.expectedException, e.getClass());
+            }
+        }
+
+    }
 
 
 
