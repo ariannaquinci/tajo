@@ -119,7 +119,7 @@
   <build>
     <pluginManagement>
       <plugins>
-
+ 		
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -138,6 +138,7 @@
             <includes>
               <include>tajo-cluster-tests/src/test/java/org/apache/tajo2/client/CatalogAdminClientImplTests.java</include>
               <include>tajo-cluster-tests/src/test/java/org/apache/tajo2/client/SessionConnectionTests.java</include>
+              <include>tajo-cluster-tests/src/test/java/org/apache/tajo2/client/QueryClientImplTests.java</include>
             </includes>
           </configuration>
         </plugin>

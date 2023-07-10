@@ -21,11 +21,11 @@ public class SessionConnectionTests {
     static {
         map.put("existingVar", "existingVarValue");
         //added after white-box approach
-        map.put("variable1","value1");
+ /*       map.put("variable1","value1");
         map.put("variable2","value2");
         map.put("variable3","value2");
         map.put("variable4","value2");
-        map.put("variable5","value2");
+        map.put("variable5","value2");*/
 
     }
 

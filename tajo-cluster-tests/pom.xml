@@ -64,6 +64,25 @@
         </executions>
       </plugin>
       <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>3.1.0</version>
+          <executions>
+            <execution>
+              <goals>
+                <goal>integration-test</goal>
+                <goal>verify</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+          	<includes>
+          	<include>IntegrationTest.java</include>
+          	</includes>
+          </configuration>
+         
+        </plugin>
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
@@ -97,6 +116,7 @@
 -->          <includes>
             <include>CatalogAdminClientImplTests.java</include>
             <include>SessionConnectionTests.java</include>
+          <include>QueryClientImplTests.java</include>
           </includes>
         </configuration>
       </plugin>
@@ -390,6 +410,8 @@
           <includes>
             <include>CatalogAdminClientImplTests.java</include>
             <include>SessionConnectionTests.java</include>
+            <include>QueryClientImplTests</include>
+            
           </includes>
         </configuration>
       </plugin>
@@ -447,10 +469,12 @@
               <targetClasses>
                 <param>org.apache.tajo2.client.CatalogAdminClientImpl</param>
                 <param>org.apache.tajo2.client.SessionConnection</param>
+                <param>org.apache.tajo2.client.QueryClientImpl</param>
               </targetClasses>
               <targetTests>
                 <param>org.apache.tajo2.client.CatalogAdminClientImplTests*</param>
                 <param>org.apache.tajo2.client.SessionConnectionTests*</param>
+                <param>org.apache.tajo2.client.QueryClientImplTests*</param>
               </targetTests>
               <avoidCallsTo>
                 <avoidCallsTo>org.slf4j</avoidCallsTo>
