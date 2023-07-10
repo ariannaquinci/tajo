@@ -20,9 +20,3 @@ jobs:
 
       - name: launch-pit
         run: mvn clean verify -P mtation-cov
-      - name: Upload report
-        uses: actions/upload-artifact@v3
-        with:
-          name: pit-report
-          path: tajo-cluster-tests/target/pit-reports/
-          if-no-files-found: error
