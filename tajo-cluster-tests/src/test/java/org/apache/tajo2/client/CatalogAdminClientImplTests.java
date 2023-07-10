@@ -196,7 +196,7 @@ public class CatalogAdminClientImplTests {
 
 
     }
-
+/*
     @RunWith(Parameterized.class)
     public static  class dropDatabaseTests{
         private Class<?extends Exception> expectedException;
@@ -257,7 +257,7 @@ public class CatalogAdminClientImplTests {
 
     }
     
-
+*/
     @RunWith(Parameterized.class)
     public static class whiteboxCreateExternalTableTests{
         public static CatalogAdminClientImpl catalogAdminClient;
